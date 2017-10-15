@@ -1,0 +1,304 @@
+{
+  "ignition": {
+    "config": {},
+    "timeouts": {},
+    "version": "2.1.0"
+  },
+  "networkd": {},
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAupfrq7qdQdhhEpt+cdLvWqHHZdOVyrDwubt7yX/AW4lRk5/GE1isqMnNknv2dl2rOuEkG9HcWEfgU1ePHPg9mfRize+UFqSY8DWPiEQy5ZPfluuSN3K1LKBuXuzbr/OKuQ+voLIomhiJeS6R5h7LmR2O8MSrlYzQA3o92k8udBdkg2TLoW8Mz1rc9+MF4ZKK4PEe9dSzEk3Qxtw+QfOtycB/iTnLZ7SZYPDz0NTHuZ4mfH67bD1wR503k8+l0jmzcSyhbe/jFDXH/HlPQi6249LYf4uy6TekdjmcF6RZ0jNYMNRa357E+ot8DJopIPMs2iCqzn0r0RO0aIM2HCgL4Q=="
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/hostname",
+        "user": {},
+        "contents": {
+          "source": "data:,master-test",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/opt/bin/download-k8s-binary",
+        "user": {},
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fbash%0Asource%20%2Fetc%2Fenvironment%0AK8S_VERSION%3Dv1.7%0Amkdir%20-p%20%2Fopt%2Fbin%0AFILE%3D%241%0Aif%20%5B%20!%20-f%20%2Fopt%2Fbin%2F%24FILE%20%5D%3B%20then%0A%20%20curl%20-sSL%20-o%20%2Fopt%2Fbin%2F%24FILE%20https%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-release%2Frelease%2F%24%7BK8S_VERSION%7D%2Fbin%2Flinux%2Famd64%2F%24FILE%0A%20%20curl%20-sSL%20-o%20%2Fopt%2Fbin%2Fkubectl%20https%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-release%2Frelease%2F%24%7BK8S_VERSION%7D%2Fbin%2Flinux%2Famd64%2Fkubectl%0A%20%20chmod%20%2Bx%20%2Fopt%2Fbin%2F%24FILE%0A%20%20chmod%20%2Bx%20%2Fopt%2Fbin%2Fkubectl%0Aelse%0A%20%20%23%20we%20check%20the%20version%20of%20the%20binary%0A%20%20INSTALLED_VERSION%3D%24(%2Fopt%2Fbin%2F%24FILE%20--version)%0A%20%20MATCH%3D%24(echo%20%22%24%7BINSTALLED_VERSION%7D%22%20%7C%20grep%20-c%20%22%24%7BK8S_VERSION%7D%22)%0A%20%20if%20%5B%20%24MATCH%20-eq%200%20%5D%3B%20then%0A%20%20%20%20%23%20the%20version%20is%20different%0A%20%20%20%20curl%20-sSL%20-o%20%2Fopt%2Fbin%2F%24FILE%20https%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-release%2Frelease%2F%24%7BK8S_VERSION%7D%2Fbin%2Flinux%2Famd64%2F%24FILE%0A%20%20%20%20curl%20-sSL%20-o%20%2Fopt%2Fbin%2Fkubectl%20https%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-release%2Frelease%2F%24%7BK8S_VERSION%7D%2Fbin%2Flinux%2Famd64%2Fkubectl%0A%20%20%20%20chmod%20%2Bx%20%2Fopt%2Fbin%2F%24FILE%0A%20%20%20%20chmod%20%2Bx%20%2Fopt%2Fbin%2Fkubectl%0A%20%20fi%0Afi%0A%0A%23%23%20Install%20Tiller%20%23%23%0Awget%20http%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-helm%2Fhelm-v2.1.3-linux-amd64.tar.gz%20--directory-prefix%3D%2Ftmp%2F%0Atar%20-C%20%2Ftmp%20-xvf%20%2Ftmp%2Fhelm-v2.1.3-linux-amd64.tar.gz%0Acp%20%2Ftmp%2Flinux-amd64%2Fhelm%20%2Fopt%2Fbin%2Fhelm%0Achmod%20%2Bx%20%2Fopt%2Fbin%2Fhelm%0A%2Fopt%2Fbin%2Fhelm%20init%0A%0A%23%23%20Install%20CNI%0A%0Acurl%20-sSL%20-o%20%2Fopt%2Fbin%2Fcni.tar.gz%20https%3A%2F%2Fstorage.googleapis.com%2Fkubernetes-release%2Fnetwork-plugins%2Fcni-07a8a28637e97b22eb8dfe710eeae1344f69d16e.tar.gz%0Atar%20xzf%20%22%2Fopt%2Fbin%2Fcni.tar.gz%22%20-C%20%22%2Fopt%2Fbin%22%20--overwrite%0Amv%20%2Fopt%2Fbin%2Fbin%2F*%20%2Fopt%2Fbin%0Arm%20-r%20%2Fopt%2Fbin%2Fbin%2F%0Arm%20-f%20%22%2Fopt%2Fbin%2Fcni.tar.gz%22%0A%0Aopenssl%20genrsa%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fca-key.pem%202048%0Aopenssl%20req%20-x509%20-new%20-nodes%20-key%20%2Fetc%2Fkubernetes%2Fssl%2Fca-key.pem%20-days%2010000%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%20-subj%20%22%2FCN%3Dkube-ca%22%0Ased%20-e%20%22s%2F%5C%24%7BMASTER_HOST%7D%2F%24COREOS_PUBLIC_IPV4%2F%22%20%3C%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf.template%20%3E%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf.public%0Ased%20-e%20%22s%2F%5C%24%7BPRIVATE_HOST%7D%2F%24COREOS_PRIVATE_IPV4%2F%22%20%3C%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf.public%20%3E%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf%0Aopenssl%20genrsa%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fapiserver-key.pem%202048%0Aopenssl%20req%20-new%20-key%20%2Fetc%2Fkubernetes%2Fssl%2Fapiserver-key.pem%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fapiserver.csr%20-subj%20%22%2FCN%3Dkube-apiserver%22%20-config%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf%0Aopenssl%20x509%20-req%20-in%20%2Fetc%2Fkubernetes%2Fssl%2Fapiserver.csr%20-CA%20%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%20-CAkey%20%2Fetc%2Fkubernetes%2Fssl%2Fca-key.pem%20-CAcreateserial%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fapiserver.pem%20-days%20365%20-extensions%20v3_req%20-extfile%20%2Fetc%2Fkubernetes%2Fssl%2Fopenssl.cnf%0Aopenssl%20genrsa%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fworker-key.pem%202048%0Aopenssl%20req%20-new%20-key%20%2Fetc%2Fkubernetes%2Fssl%2Fworker-key.pem%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fworker.csr%20-subj%20%22%2FCN%3Dkube-worker%22%0Aopenssl%20x509%20-req%20-in%20%2Fetc%2Fkubernetes%2Fssl%2Fworker.csr%20-CA%20%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%20-CAkey%20%2Fetc%2Fkubernetes%2Fssl%2Fca-key.pem%20-CAcreateserial%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fworker.pem%20-days%20365%0Aopenssl%20genrsa%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fadmin-key.pem%202048%0Aopenssl%20req%20-new%20-key%20%2Fetc%2Fkubernetes%2Fssl%2Fadmin-key.pem%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fadmin.csr%20-subj%20%22%2FCN%3Dkube-admin%22%0Aopenssl%20x509%20-req%20-in%20%2Fetc%2Fkubernetes%2Fssl%2Fadmin.csr%20-CA%20%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%20-CAkey%20%2Fetc%2Fkubernetes%2Fssl%2Fca-key.pem%20-CAcreateserial%20-out%20%2Fetc%2Fkubernetes%2Fssl%2Fadmin.pem%20-days%20365%0Achmod%20600%20%2Fetc%2Fkubernetes%2Fssl%2F*-key.pem%0Achown%20root%3Aroot%20%2Fetc%2Fkubernetes%2Fssl%2F*-key.pem%0A",
+          "verification": {}
+        },
+        "mode": 493
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/opt/bin/kube-post-start.sh",
+        "user": {},
+        "contents": {
+          "source": "data:,%23!%2Fbin%2Fbash%0Auntil%20%24(curl%20--output%20%2Fdev%2Fnull%20--silent%20--head%20--fail%20http%3A%2F%2F127.0.0.1%3A8080)%3B%20do%20printf%20'.'%3B%20sleep%205%3B%20done%0Acurl%20-XPOST%20-H%20'Content-type%3A%20application%2Fjson'%20-d'%7B%22apiVersion%22%3A%22v1%22%2C%22kind%22%3A%22Namespace%22%2C%22metadata%22%3A%7B%22name%22%3A%22kube-system%22%7D%7D'%20http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Fv1%2Fnamespaces%0A%2Fopt%2Fbin%2Fkubectl%20config%20set-cluster%20default-cluster%20--server%3D%22127.0.0.1%3A8080%22%0A%2Fopt%2Fbin%2Fkubectl%20config%20set-context%20default-system%20--cluster%3Ddefault-cluster%20--user%3Ddefault-admin%0A%2Fopt%2Fbin%2Fkubectl%20config%20use-context%20default-system%0A%2Fopt%2Fbin%2Fkubectl%20create%20-f%20%2Fetc%2Fkubernetes%2Faddons%2Fkube-dns.yaml%0A%2Fopt%2Fbin%2Fkubectl%20create%20-f%20%2Fetc%2Fkubernetes%2Faddons%2Fcluster-monitoring%0A%2Fopt%2Fbin%2Fhelm%20init%0A",
+          "verification": {}
+        },
+        "mode": 493
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/ssl/openssl.cnf.template",
+        "user": {},
+        "contents": {
+          "source": "data:,%5Breq%5D%0Areq_extensions%20%3D%20v3_req%0Adistinguished_name%20%3D%20req_distinguished_name%0A%5Breq_distinguished_name%5D%0A%5B%20v3_req%20%5D%0AbasicConstraints%20%3D%20CA%3AFALSE%0AkeyUsage%20%3D%20nonRepudiation%2C%20digitalSignature%2C%20keyEncipherment%0AsubjectAltName%20%3D%20%40alt_names%0A%5Balt_names%5D%0ADNS.1%20%3D%20kubernetes%0ADNS.2%20%3D%20kubernetes.default%0AIP.1%20%3D%2010.3.0.1%0AIP.2%20%3D%20%24%7BMASTER_HOST%7D%0AIP.3%20%3D%20%24%7BPRIVATE_HOST%7D%0A",
+          "verification": {}
+        },
+        "mode": 493
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/ssl/basic_auth.csv",
+        "user": {},
+        "contents": {
+          "source": "data:,%7B%7B%20.Password%20%7D%7D%2C%7B%7B%20.Username%20%7D%7D%2Cadmin%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/ssl/known_tokens.csv",
+        "user": {},
+        "contents": {
+          "source": "data:,%7B%7B%20.Password%20%7D%7D%2Ckubelet%2Ckubelet%0A%7B%7B%20.Password%20%7D%7D%2Ckube_proxy%2Ckube_proxy%0A%7B%7B%20.Password%20%7D%7D%2Csystem%3Ascheduler%2Csystem%3Ascheduler%0A%7B%7B%20.Password%20%7D%7D%2Csystem%3Acontroller_manager%2Csystem%3Acontroller_manager%0A%7B%7B%20.Password%20%7D%7D%2Csystem%3Alogging%2Csystem%3Alogging%0A%7B%7B%20.Password%20%7D%7D%2Csystem%3Amonitoring%2Csystem%3Amonitoring%0A%7B%7B%20.Password%20%7D%7D%2Csystem%3Adns%2Csystem%3Adns%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/namespace.yaml",
+        "user": {},
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Namespace%0Ametadata%3A%0A%20%20name%3A%20kube-system%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/var/lib/kubelet/kubeconfig",
+        "user": {},
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Config%0Ausers%3A%0A-%20name%3A%20kubelet%0A%20%20user%3A%0A%20%20%20%20token%3A%20%7B%7B%20.Password%20%7D%7D%0Aclusters%3A%0A-%20name%3A%20local%0A%20%20cluster%3A%0A%20%20%20%20%20insecure-skip-tls-verify%3A%20true%0Acontexts%3A%0A-%20context%3A%0A%20%20%20%20cluster%3A%20local%0A%20%20%20%20user%3A%20kubelet%0A%20%20name%3A%20service-account-context%0Acurrent-context%3A%20service-account-context%0A",
+          "verification": {}
+        },
+        "mode": 256
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/manifests/kube-apiserver.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Pod%0Ametadata%3A%0A%20%20name%3A%20kube-apiserver%0A%20%20namespace%3A%20kube-system%0Aspec%3A%0A%20%20hostNetwork%3A%20true%0A%20%20containers%3A%0A%20%20-%20name%3A%20kube-apiserver%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fhyperkube%3Av1.7%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fhyperkube%0A%20%20%20%20-%20apiserver%0A%20%20%20%20-%20--bind-address%3D0.0.0.0%0A%20%20%20%20-%20--v%3D2%0A%20%20%20%20-%20--address%3D127.0.0.1%0A%20%20%20%20-%20--etcd-servers%3Dhttp%3A%2F%2F127.0.0.1%3A2379%0A%20%20%20%20-%20--allow-privileged%3Dtrue%0A%20%20%20%20-%20--service-cluster-ip-range%3D10.3.0.0%2F24%0A%20%20%20%20-%20--secure-port%3D443%0A%20%20%20%20-%20--advertise-address%3D%24private_ipv4%0A%20%20%20%20-%20--admission-control%3DNamespaceLifecycle%2CNamespaceExists%2CLimitRanger%2CServiceAccount%2CResourceQuota%0A%20%20%20%20-%20--tls-cert-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fapiserver.pem%0A%20%20%20%20-%20--tls-private-key-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fapiserver-key.pem%0A%20%20%20%20-%20--client-ca-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%0A%20%20%20%20-%20--service-account-key-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fapiserver-key.pem%0A%20%20%20%20-%20--basic-auth-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fbasic_auth.csv%0A%20%20%20%20-%20--token-auth-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fknown_tokens.csv%0A%20%20%20%20-%20--kubelet-preferred-address-types%3DInternalIP%2CHostname%2CExternalIP%0A%20%20%20%20ports%3A%0A%20%20%20%20-%20containerPort%3A%20443%0A%20%20%20%20%20%20hostPort%3A%20443%0A%20%20%20%20%20%20name%3A%20https%0A%20%20%20%20-%20containerPort%3A%208080%0A%20%20%20%20%20%20hostPort%3A%208080%0A%20%20%20%20%20%20name%3A%20local%0A%20%20%20%20volumeMounts%3A%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fkubernetes%2Fssl%0A%20%20%20%20%20%20name%3A%20ssl-certs-kubernetes%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fkubernetes%2Faddons%0A%20%20%20%20%20%20name%3A%20api-addons-kubernetes%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fssl%2Fcerts%0A%20%20%20%20%20%20name%3A%20ssl-certs-host%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20volumes%3A%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fetc%2Fkubernetes%2Fssl%0A%20%20%20%20name%3A%20ssl-certs-kubernetes%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fetc%2Fkubernetes%2Faddons%0A%20%20%20%20name%3A%20api-addons-kubernetes%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fusr%2Fshare%2Fca-certificates%0A%20%20%20%20name%3A%20ssl-certs-host%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/manifests/kube-proxy.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Pod%0Ametadata%3A%0A%20%20name%3A%20kube-proxy%0A%20%20namespace%3A%20kube-system%0Aspec%3A%0A%20%20hostNetwork%3A%20true%0A%20%20containers%3A%0A%20%20-%20name%3A%20kube-proxy%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fhyperkube%3Av1.7%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fhyperkube%0A%20%20%20%20-%20proxy%0A%20%20%20%20-%20--master%3Dhttp%3A%2F%2F127.0.0.1%3A8080%0A%20%20%20%20-%20--proxy-mode%3Diptables%0A%20%20%20%20securityContext%3A%0A%20%20%20%20%20%20privileged%3A%20true%0A%20%20%20%20volumeMounts%3A%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fssl%2Fcerts%0A%20%20%20%20%20%20name%3A%20ssl-certs-host%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20volumes%3A%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fusr%2Fshare%2Fca-certificates%0A%20%20%20%20name%3A%20ssl-certs-host%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/cluster-monitoring/heapster-controller.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20ReplicationController%0Ametadata%3A%0A%20%20name%3A%20heapster-v11%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20k8s-app%3A%20heapster%0A%20%20%20%20version%3A%20v11%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0Aspec%3A%0A%20%20replicas%3A%201%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20heapster%0A%20%20%20%20version%3A%20v11%0A%20%20template%3A%0A%20%20%20%20metadata%3A%0A%20%20%20%20%20%20labels%3A%0A%20%20%20%20%20%20%20%20k8s-app%3A%20heapster%0A%20%20%20%20%20%20%20%20version%3A%20v11%0A%20%20%20%20%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20spec%3A%0A%20%20%20%20%20%20containers%3A%0A%20%20%20%20%20%20%20%20-%20image%3A%20gcr.io%2Fgoogle_containers%2Fheapster%3A%7B%7B%20.HeapsterVersion%20%7D%7D%0A%20%20%20%20%20%20%20%20%20%20name%3A%20heapster%0A%20%20%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%20212Mi%0A%20%20%20%20%20%20%20%20%20%20command%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20%2Fheapster%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20--source%3Dkubernetes%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20--sink%3Dinfluxdb%3Ahttp%3A%2F%2Fmonitoring-influxdb%3A8086%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20--metric_resolution%3D%7B%7B%20.HeapsterMetricResolution%20%7D%7D%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/cluster-monitoring/heapster-service.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,kind%3A%20Service%0AapiVersion%3A%20v1%0Ametadata%3A%0A%20%20name%3A%20heapster%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20kubernetes.io%2Fname%3A%20%22Heapster%22%0Aspec%3A%0A%20%20ports%3A%0A%20%20%20%20-%20port%3A%2080%0A%20%20%20%20%20%20targetPort%3A%208082%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20heapster%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/cluster-monitoring/influxdb-grafana-controller.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20ReplicationController%0Ametadata%3A%0A%20%20name%3A%20monitoring-influxdb-grafana-v2%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20k8s-app%3A%20influxGrafana%0A%20%20%20%20version%3A%20v2%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0Aspec%3A%0A%20%20replicas%3A%201%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20influxGrafana%0A%20%20%20%20version%3A%20v2%0A%20%20template%3A%0A%20%20%20%20metadata%3A%0A%20%20%20%20%20%20labels%3A%0A%20%20%20%20%20%20%20%20k8s-app%3A%20influxGrafana%0A%20%20%20%20%20%20%20%20version%3A%20v2%0A%20%20%20%20%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20spec%3A%0A%20%20%20%20%20%20containers%3A%0A%20%20%20%20%20%20%20%20-%20image%3A%20gcr.io%2Fgoogle_containers%2Fheapster_influxdb%3Av0.4%0A%20%20%20%20%20%20%20%20%20%20name%3A%20influxdb%0A%20%20%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%20200Mi%0A%20%20%20%20%20%20%20%20%20%20ports%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20containerPort%3A%208083%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20hostPort%3A%208083%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20containerPort%3A%208086%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20hostPort%3A%208086%0A%20%20%20%20%20%20%20%20%20%20volumeMounts%3A%0A%20%20%20%20%20%20%20%20%20%20-%20name%3A%20influxdb-persistent-storage%0A%20%20%20%20%20%20%20%20%20%20%20%20mountPath%3A%20%2Fdata%0A%20%20%20%20%20%20%20%20-%20image%3A%20beta.gcr.io%2Fgoogle_containers%2Fheapster_grafana%3Av2.1.1%0A%20%20%20%20%20%20%20%20%20%20name%3A%20grafana%0A%20%20%20%20%20%20%20%20%20%20env%3A%0A%20%20%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%20100Mi%0A%20%20%20%20%20%20%20%20%20%20env%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20This%20variable%20is%20required%20to%20setup%20templates%20in%20Grafana.%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20name%3A%20INFLUXDB_SERVICE_URL%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20http%3A%2F%2Fmonitoring-influxdb%3A8086%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%23%20The%20following%20env%20variables%20are%20required%20to%20make%20Grafana%20accessible%20via%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%23%20the%20kubernetes%20api-server%20proxy.%20On%20production%20clusters%2C%20we%20recommend%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%23%20removing%20these%20env%20variables%2C%20setup%20auth%20for%20grafana%2C%20and%20expose%20the%20grafana%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%23%20service%20using%20a%20LoadBalancer%20or%20a%20public%20IP.%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20name%3A%20GF_AUTH_BASIC_ENABLED%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20%22false%22%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20name%3A%20GF_AUTH_ANONYMOUS_ENABLED%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20%22true%22%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20name%3A%20GF_AUTH_ANONYMOUS_ORG_ROLE%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20Admin%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20name%3A%20GF_SERVER_ROOT_URL%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3A%20%2Fapi%2Fv1%2Fproxy%2Fnamespaces%2Fkube-system%2Fservices%2Fmonitoring-grafana%2F%0A%20%20%20%20%20%20%20%20%20%20volumeMounts%3A%0A%20%20%20%20%20%20%20%20%20%20-%20name%3A%20grafana-persistent-storage%0A%20%20%20%20%20%20%20%20%20%20%20%20mountPath%3A%20%2Fvar%0A%0A%20%20%20%20%20%20volumes%3A%0A%20%20%20%20%20%20-%20name%3A%20influxdb-persistent-storage%0A%20%20%20%20%20%20%20%20emptyDir%3A%20%7B%7D%0A%20%20%20%20%20%20-%20name%3A%20grafana-persistent-storage%0A%20%20%20%20%20%20%20%20emptyDir%3A%20%7B%7D%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/cluster-monitoring/influxdb-service.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Service%0Ametadata%3A%0A%20%20name%3A%20monitoring-influxdb%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20kubernetes.io%2Fname%3A%20%22InfluxDB%22%0Aspec%3A%0A%20%20ports%3A%0A%20%20%20%20-%20name%3A%20http%0A%20%20%20%20%20%20port%3A%208083%0A%20%20%20%20%20%20targetPort%3A%208083%0A%20%20%20%20-%20name%3A%20api%0A%20%20%20%20%20%20port%3A%208086%0A%20%20%20%20%20%20targetPort%3A%208086%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20influxGrafana%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/addons/kube-dns.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Service%0Ametadata%3A%0A%20%20name%3A%20kube-dns%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20k8s-app%3A%20kube-dns%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20kubernetes.io%2Fname%3A%20%22KubeDNS%22%0Aspec%3A%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20kube-dns%0A%20%20clusterIP%3A%2010.3.0.10%0A%20%20ports%3A%0A%20%20-%20name%3A%20dns%0A%20%20%20%20port%3A%2053%0A%20%20%20%20protocol%3A%20UDP%0A%20%20-%20name%3A%20dns-tcp%0A%20%20%20%20port%3A%2053%0A%20%20%20%20protocol%3A%20TCP%0A%0A---%0A%0AapiVersion%3A%20v1%0Akind%3A%20ReplicationController%0Ametadata%3A%0A%20%20name%3A%20kube-dns-v11%0A%20%20namespace%3A%20kube-system%0A%20%20labels%3A%0A%20%20%20%20k8s-app%3A%20kube-dns%0A%20%20%20%20version%3A%20v11%0A%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0Aspec%3A%0A%20%20replicas%3A%201%0A%20%20selector%3A%0A%20%20%20%20k8s-app%3A%20kube-dns%0A%20%20%20%20version%3A%20v11%0A%20%20template%3A%0A%20%20%20%20metadata%3A%0A%20%20%20%20%20%20labels%3A%0A%20%20%20%20%20%20%20%20k8s-app%3A%20kube-dns%0A%20%20%20%20%20%20%20%20version%3A%20v11%0A%20%20%20%20%20%20%20%20kubernetes.io%2Fcluster-service%3A%20%22true%22%0A%20%20%20%20spec%3A%0A%20%20%20%20%20%20containers%3A%0A%20%20%20%20%20%20-%20name%3A%20etcd%0A%20%20%20%20%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fetcd%3A2.0.9%0A%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%2050Mi%0A%20%20%20%20%20%20%20%20command%3A%0A%20%20%20%20%20%20%20%20-%20%2Fusr%2Flocal%2Fbin%2Fetcd%0A%20%20%20%20%20%20%20%20-%20-data-dir%0A%20%20%20%20%20%20%20%20-%20%2Fvar%2Fetcd%2Fdata%0A%20%20%20%20%20%20%20%20-%20-listen-client-urls%0A%20%20%20%20%20%20%20%20-%20http%3A%2F%2F127.0.0.1%3A2379%2Chttp%3A%2F%2F127.0.0.1%3A4001%0A%20%20%20%20%20%20%20%20-%20-advertise-client-urls%0A%20%20%20%20%20%20%20%20-%20http%3A%2F%2F127.0.0.1%3A2379%2Chttp%3A%2F%2F127.0.0.1%3A4001%0A%20%20%20%20%20%20%20%20-%20-initial-cluster-token%0A%20%20%20%20%20%20%20%20-%20skydns-etcd%0A%20%20%20%20%20%20%20%20volumeMounts%3A%0A%20%20%20%20%20%20%20%20-%20name%3A%20etcd-storage%0A%20%20%20%20%20%20%20%20%20%20mountPath%3A%20%2Fvar%2Fetcd%2Fdata%0A%20%20%20%20%20%20-%20name%3A%20kube2sky%0A%20%20%20%20%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fkube2sky%3A1.11%0A%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%2050Mi%0A%20%20%20%20%20%20%20%20args%3A%0A%20%20%20%20%20%20%20%20%23%20command%20%3D%20%22%2Fkube2sky%22%0A%20%20%20%20%20%20%20%20-%20-domain%3Dcluster.local%0A%20%20%20%20%20%20-%20name%3A%20skydns%0A%20%20%20%20%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fskydns%3A2015-03-11-001%0A%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%20100m%0A%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%2050Mi%0A%20%20%20%20%20%20%20%20args%3A%0A%20%20%20%20%20%20%20%20%23%20command%20%3D%20%22%2Fskydns%22%0A%20%20%20%20%20%20%20%20-%20-machines%3Dhttp%3A%2F%2Flocalhost%3A4001%0A%20%20%20%20%20%20%20%20-%20-addr%3D0.0.0.0%3A53%0A%20%20%20%20%20%20%20%20-%20-domain%3Dcluster.local.%0A%20%20%20%20%20%20%20%20ports%3A%0A%20%20%20%20%20%20%20%20-%20containerPort%3A%2053%0A%20%20%20%20%20%20%20%20%20%20name%3A%20dns%0A%20%20%20%20%20%20%20%20%20%20protocol%3A%20UDP%0A%20%20%20%20%20%20%20%20-%20containerPort%3A%2053%0A%20%20%20%20%20%20%20%20%20%20name%3A%20dns-tcp%0A%20%20%20%20%20%20%20%20%20%20protocol%3A%20TCP%0A%20%20%20%20%20%20%20%20livenessProbe%3A%0A%20%20%20%20%20%20%20%20%20%20httpGet%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20path%3A%20%2Fhealthz%0A%20%20%20%20%20%20%20%20%20%20%20%20port%3A%208080%0A%20%20%20%20%20%20%20%20%20%20%20%20scheme%3A%20HTTP%0A%20%20%20%20%20%20%20%20%20%20initialDelaySeconds%3A%2030%0A%20%20%20%20%20%20%20%20%20%20timeoutSeconds%3A%205%0A%20%20%20%20%20%20%20%20readinessProbe%3A%0A%20%20%20%20%20%20%20%20%20%20httpGet%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20path%3A%20%2Fhealthz%0A%20%20%20%20%20%20%20%20%20%20%20%20port%3A%208080%0A%20%20%20%20%20%20%20%20%20%20%20%20scheme%3A%20HTTP%0A%20%20%20%20%20%20%20%20%20%20initialDelaySeconds%3A%201%0A%20%20%20%20%20%20%20%20%20%20timeoutSeconds%3A%205%0A%20%20%20%20%20%20-%20name%3A%20healthz%0A%20%20%20%20%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fexechealthz%3A1.0%0A%20%20%20%20%20%20%20%20resources%3A%0A%20%20%20%20%20%20%20%20%20%20limits%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20cpu%3A%2010m%0A%20%20%20%20%20%20%20%20%20%20%20%20memory%3A%2020Mi%0A%20%20%20%20%20%20%20%20args%3A%0A%20%20%20%20%20%20%20%20-%20-cmd%3Dnslookup%20kubernetes.default.svc.cluster.local%20localhost%20%3E%2Fdev%2Fnull%0A%20%20%20%20%20%20%20%20-%20-port%3D8080%0A%20%20%20%20%20%20%20%20ports%3A%0A%20%20%20%20%20%20%20%20-%20containerPort%3A%208080%0A%20%20%20%20%20%20%20%20%20%20protocol%3A%20TCP%0A%20%20%20%20%20%20volumes%3A%0A%20%20%20%20%20%20-%20name%3A%20etcd-storage%0A%20%20%20%20%20%20%20%20emptyDir%3A%20%7B%7D%0A%20%20%20%20%20%20dnsPolicy%3A%20Default%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/kubernetes/manifests/kube-podmaster.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Pod%0Ametadata%3A%0A%20%20name%3A%20kube-podmaster%0A%20%20namespace%3A%20kube-system%0Aspec%3A%0A%20%20hostNetwork%3A%20true%0A%20%20containers%3A%0A%20%20-%20name%3A%20scheduler-elector%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fpodmaster%3A1.1%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fpodmaster%0A%20%20%20%20-%20--etcd-servers%3Dhttp%3A%2F%2F127.0.0.1%3A2379%0A%20%20%20%20-%20--key%3Dscheduler%0A%20%20%20%20-%20--whoami%3D%24private_ipv4%0A%20%20%20%20-%20--source-file%3D%2Fsrc%2Fmanifests%2Fkube-scheduler.yaml%0A%20%20%20%20-%20--dest-file%3D%2Fdst%2Fmanifests%2Fkube-scheduler.yaml%0A%20%20%20%20volumeMounts%3A%0A%20%20%20%20-%20mountPath%3A%20%2Fsrc%2Fmanifests%0A%20%20%20%20%20%20name%3A%20manifest-src%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20%20%20-%20mountPath%3A%20%2Fdst%2Fmanifests%0A%20%20%20%20%20%20name%3A%20manifest-dst%0A%20%20-%20name%3A%20controller-manager-elector%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fpodmaster%3A1.1%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fpodmaster%0A%20%20%20%20-%20--etcd-servers%3Dhttp%3A%2F%2F127.0.0.1%3A2379%0A%20%20%20%20-%20--key%3Dcontroller%0A%20%20%20%20-%20--whoami%3D%24private_ipv4%0A%20%20%20%20-%20--source-file%3D%2Fsrc%2Fmanifests%2Fkube-controller-manager.yaml%0A%20%20%20%20-%20--dest-file%3D%2Fdst%2Fmanifests%2Fkube-controller-manager.yaml%0A%20%20%20%20terminationMessagePath%3A%20%2Fdev%2Ftermination-log%0A%20%20%20%20volumeMounts%3A%0A%20%20%20%20-%20mountPath%3A%20%2Fsrc%2Fmanifests%0A%20%20%20%20%20%20name%3A%20manifest-src%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20%20%20-%20mountPath%3A%20%2Fdst%2Fmanifests%0A%20%20%20%20%20%20name%3A%20manifest-dst%0A%20%20volumes%3A%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fsrv%2Fkubernetes%2Fmanifests%0A%20%20%20%20name%3A%20manifest-src%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fetc%2Fkubernetes%2Fmanifests%0A%20%20%20%20name%3A%20manifest-dst%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/srv/kubernetes/manifests/kube-controller-manager.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Pod%0Ametadata%3A%0A%20%20name%3A%20kube-controller-manager%0A%20%20namespace%3A%20kube-system%0Aspec%3A%0A%20%20hostNetwork%3A%20true%0A%20%20containers%3A%0A%20%20-%20name%3A%20kube-controller-manager%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fhyperkube%3Av1.7%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fhyperkube%0A%20%20%20%20-%20controller-manager%0A%20%20%20%20-%20--master%3Dhttp%3A%2F%2F127.0.0.1%3A8080%0A%20%20%20%20-%20--service-account-private-key-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fapiserver-key.pem%0A%20%20%20%20-%20--root-ca-file%3D%2Fetc%2Fkubernetes%2Fssl%2Fca.pem%0A%20%20%20%20-%20--v%3D2%0A%20%20%20%20-%20--cluster-cidr%3D10.244.0.0%2F14%0A%20%20%20%20-%20--allocate-node-cidrs%3Dtrue%0A%20%20%20%20livenessProbe%3A%0A%20%20%20%20%20%20httpGet%3A%0A%20%20%20%20%20%20%20%20host%3A%20127.0.0.1%0A%20%20%20%20%20%20%20%20path%3A%20%2Fhealthz%0A%20%20%20%20%20%20%20%20port%3A%2010252%0A%20%20%20%20%20%20initialDelaySeconds%3A%2015%0A%20%20%20%20%20%20timeoutSeconds%3A%201%0A%20%20%20%20volumeMounts%3A%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fkubernetes%2Fssl%0A%20%20%20%20%20%20name%3A%20ssl-certs-kubernetes%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20%20%20-%20mountPath%3A%20%2Fetc%2Fssl%2Fcerts%0A%20%20%20%20%20%20name%3A%20ssl-certs-host%0A%20%20%20%20%20%20readOnly%3A%20true%0A%20%20volumes%3A%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fetc%2Fkubernetes%2Fssl%0A%20%20%20%20name%3A%20ssl-certs-kubernetes%0A%20%20-%20hostPath%3A%0A%20%20%20%20%20%20path%3A%20%2Fusr%2Fshare%2Fca-certificates%0A%20%20%20%20name%3A%20ssl-certs-host%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/srv/kubernetes/manifests/kube-scheduler.yaml",
+        "user": {
+          "name": "root"
+        },
+        "contents": {
+          "source": "data:,apiVersion%3A%20v1%0Akind%3A%20Pod%0Ametadata%3A%0A%20%20name%3A%20kube-scheduler%0A%20%20namespace%3A%20kube-system%0Aspec%3A%0A%20%20hostNetwork%3A%20true%0A%20%20containers%3A%0A%20%20-%20name%3A%20kube-scheduler%0A%20%20%20%20image%3A%20gcr.io%2Fgoogle_containers%2Fhyperkube%3Av1.7%0A%20%20%20%20command%3A%0A%20%20%20%20-%20%2Fhyperkube%0A%20%20%20%20-%20scheduler%0A%20%20%20%20-%20--master%3Dhttp%3A%2F%2F127.0.0.1%3A8080%0A%20%20%20%20livenessProbe%3A%0A%20%20%20%20%20%20httpGet%3A%0A%20%20%20%20%20%20%20%20host%3A%20127.0.0.1%0A%20%20%20%20%20%20%20%20path%3A%20%2Fhealthz%0A%20%20%20%20%20%20%20%20port%3A%2010251%0A%20%20%20%20%20%20initialDelaySeconds%3A%2015%0A%20%20%20%20%20%20timeoutSeconds%3A%201%0A",
+          "verification": {}
+        },
+        "mode": 420
+      },
+      {
+        "filesystem": "root",
+        "group": {},
+        "path": "/etc/coreos/update.conf",
+        "user": {},
+        "contents": {
+          "source": "data:,%0AREBOOT_STRATEGY%3D%22off%22",
+          "verification": {}
+        },
+        "mode": 420
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "dropins": [
+          {
+            "contents": "[Unit]\nRequires=coreos-metadata.service\nAfter=coreos-metadata.service\n\n[Service]\nEnvironmentFile=/run/metadata/coreos\nExecStart=\nExecStart=/usr/lib/coreos/etcd-wrapper $ETCD_OPTS \\\n  --name=\"${COREOS_PACKET_HOSTNAME}\" \\\n  --listen-peer-urls=\"http://${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --listen-client-urls=\"http://0.0.0.0:2379\" \\\n  --initial-advertise-peer-urls=\"${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --initial-cluster=\"%m=http://${COREOS_PACKET_IPV4_PRIVATE_0}:2380\" \\\n  --advertise-client-urls=\"${COREOS_PACKET_IPV4_PRIVATE_0}:2379\"",
+            "name": "20-clct-etcd-member.conf"
+          }
+        ],
+        "enable": true,
+        "name": "etcd-member.service"
+      },
+      {
+        "dropins": [
+          {
+            "contents": "[Service]\nEnvironment=\"FLANNEL_IMAGE_TAG=v0.7.0\"\nExecStart=\nExecStart=/usr/lib/coreos/flannel-wrapper $FLANNEL_OPTS \\\n  --etcd-endpoints=\"http://127.0.0.1:2379\" \\\n  --etcd-prefix=\"/coreos.com/network2\"",
+            "name": "20-clct-flannel.conf"
+          }
+        ],
+        "enable": true,
+        "name": "flanneld.service"
+      },
+      {
+        "enabled": true,
+        "name": "etcd2.service"
+      },
+      {
+        "dropins": [
+          {
+            "contents": "[Unit]\nRequires=etcd2.service\n[Service]\nExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{\"Network\":\"10.2.0.0/16\", \"Backend\": {\"Type\": \"vxlan\"}}'\n",
+            "name": "50-network-config.conf"
+          }
+        ],
+        "enabled": true,
+        "name": "flanneld.service"
+      },
+      {
+        "dropins": [
+          {
+            "contents": "[Unit]\nRequires=flanneld.service\nAfter=flanneld.service\n",
+            "name": "40-flannel.conf"
+          }
+        ],
+        "enabled": true,
+        "name": "docker.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Kubernetes Kubelet\n[Service]\nEnvironment=KUBELET_IMAGE_TAG=v1.7_coreos.0\nEnvironment=\"RKT_RUN_ARGS=--volume=resolv,kind=host,source=/etc/resolv.conf \\\n  --mount volume=resolv,target=/etc/resolv.conf \\\n  --uuid-file-save=/var/run/kubelet-pod.uuid\"\nExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kubelet-pod.uuid\nExecStartPre=/bin/bash -c \"/opt/bin/download-k8s-binary kubelet\"\nExecStartPost=/bin/bash -c \"/opt/bin/kube-post-start.sh\"\nExecStart=/usr/lib/coreos/kubelet-wrapper \\\n --api-servers=http://127.0.0.1:8080 \\\n --v=2 \\\n --allow-privileged=true \\\n --cadvisor-port=0 \\\n --pod-manifest-path=/etc/kubernetes/manifests \\\n --cluster-dns=10.3.0.10 \\\n --cluster_domain=cluster.local \\\n --register-node=false\nExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid\nRestart=on-failure\nTimeoutSec=300\nRestartSec=5\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "kubelet.service"
+      }
+    ]
+  }
+}
