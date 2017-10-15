@@ -16,6 +16,17 @@
     ]
   },
   "storage": {
+    "disks": [
+      {
+        "device": "/dev/sda",
+        "partitions": [
+          {
+            "label": "ROOT"
+          }
+        ],
+        "wipeTable": true
+      }
+    ],
     "files": [
       {
         "filesystem": "root",
@@ -27,6 +38,21 @@
           "verification": {}
         },
         "mode": 420
+      }
+    ],
+    "filesystems": [
+      {
+        "mount": {
+          "create": {
+            "force": true,
+            "options": [
+              "-L",
+              "ROOT"
+            ]
+          },
+          "device": "/dev/disk/by-partlabel/ROOT",
+          "format": "ext4"
+        }
       }
     ]
   },
